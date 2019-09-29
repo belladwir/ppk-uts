@@ -42,6 +42,8 @@
             this.text_total = new System.Windows.Forms.TextBox();
             this.orderdetail = new System.Windows.Forms.ListView();
             this.button1 = new System.Windows.Forms.Button();
+            this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.SuspendLayout();
             // 
             // listView_order
@@ -127,7 +129,6 @@
             this.text_id.Name = "text_id";
             this.text_id.Size = new System.Drawing.Size(100, 20);
             this.text_id.TabIndex = 7;
-            this.text_id.Visible = false;
             // 
             // text_nama
             // 
@@ -145,6 +146,9 @@
             // 
             // orderdetail
             // 
+            this.orderdetail.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeader4,
+            this.columnHeader5});
             this.orderdetail.HideSelection = false;
             this.orderdetail.Location = new System.Drawing.Point(380, 194);
             this.orderdetail.Name = "orderdetail";
@@ -162,6 +166,15 @@
             this.button1.Text = "Selesai";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.Button1_Click);
+            // 
+            // columnHeader4
+            // 
+            this.columnHeader4.Text = "Menu";
+            this.columnHeader4.Width = 183;
+            // 
+            // columnHeader5
+            // 
+            this.columnHeader5.Text = "Jumlah";
             // 
             // Orderlist
             // 
@@ -203,5 +216,7 @@
         private System.Windows.Forms.TextBox text_total;
         private System.Windows.Forms.ListView orderdetail;
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.ColumnHeader columnHeader4;
+        private System.Windows.Forms.ColumnHeader columnHeader5;
     }
 }

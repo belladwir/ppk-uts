@@ -24,7 +24,36 @@ namespace order_coffe
 
         private void Button_pesan_Click(object sender, EventArgs e)
         {
+            CheckOut Check = new CheckOut(id);
+            Check.Show();
+        }
 
+        public void refresh()
+        {
+            listView1.Items.Clear();
+            string query = "SELECT * FROM stgk_pemesanan";
+            MySqlCommand cmd = new MySqlCommand(query, databaseConn);
+            cmd.CommandTimeout = 60;
+            MySqlDataReader r = cmd.ExecuteReader();
+
+            if (r.HasRows)
+            {
+                while (r.Read())
+                {
+                    ListViewItem listcust = new ListViewItem(r["id_pemesanan"].ToString());
+                    listcust.SubItems.Add(r["nama_pembeli"].ToString());
+                    listcust.SubItems.Add(r["jumlah_orang"].ToString());
+                    listcust.SubItems.Add(r["type"].ToString());
+                    listcust.SubItems.Add(r["total_harga"].ToString());
+                    listcust.SubItems.Add(r["status"].ToString());
+                    listView1.Items.Add(listcust);
+                }
+                r.Close();
+            }
+            else
+            {
+                MessageBox.Show("Tidak ada data customer");
+            }
         }
 
         private void Customer_Load(object sender, EventArgs e)
@@ -42,6 +71,8 @@ namespace order_coffe
                 {
                     ListViewItem listcust = new ListViewItem(r["id_pemesanan"].ToString());
                     listcust.SubItems.Add(r["nama_pembeli"].ToString());
+                    listcust.SubItems.Add(r["jumlah_orang"].ToString());
+                    listcust.SubItems.Add(r["type"].ToString());
                     listcust.SubItems.Add(r["total_harga"].ToString());
                     listcust.SubItems.Add(r["status"].ToString());
                     listView1.Items.Add(listcust);
@@ -79,6 +110,15 @@ namespace order_coffe
                         id = r["id_pemesanan"].ToString();
                         textBox1.Text = r["nama_pembeli"].ToString();
                         textBox2.Text = r["jumlah_orang"].ToString();
+                        if(r["type"].ToString() == "Dine In")
+                        {
+                            radioButton1.Checked = true;
+                        }
+                        else
+                        {
+                            radioButton2.Checked = true;
+                        }
+                        label4.Text = id;
                     }
                     r.Close();
                 }
@@ -93,6 +133,109 @@ namespace order_coffe
                 textBox2.Text = "";
             }
             databaseConn.Close();
+        }
+
+        string tipe;
+        private void Button2_Click(object sender, EventArgs e)
+        {
+            string query = "INSERT INTO stgk_pemesanan (nama_pembeli, jumlah_orang, type, tanggal) VALUES (@nama, @jumlah, @type, NOW());";
+            if (radioButton1.Checked)
+            {
+                tipe = radioButton1.Text;
+            }
+            else
+            {
+                tipe = radioButton2.Text;
+            }
+            try
+            {
+                databaseConn.Open();
+                MySqlCommand cmd = new MySqlCommand(query, databaseConn);
+                cmd.Parameters.AddWithValue("@nama", textBox1.Text);
+                cmd.Parameters.AddWithValue("@jumlah", textBox2.Text);
+                cmd.Parameters.AddWithValue("@type", tipe);
+                cmd.ExecuteNonQuery();
+                MessageBox.Show("Berhasil menambahkan customer");
+                refresh();
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            finally
+            {
+                databaseConn.Close();
+                textBox1.Text = "";
+                textBox2.Text = "";
+            }
+        }
+
+        private void Button3_Click(object sender, EventArgs e)
+        {
+            string query = "UPDATE stgk_pemesanan SET nama_pembeli = @nama, jumlah_orang = @jumlah, type = @type WHERE id_pemesanan = @id;";
+            if (radioButton1.Checked)
+            {
+                tipe = radioButton1.Text;
+            }
+            else
+            {
+                tipe = radioButton2.Text;
+            }
+            string id = label4.Text;
+
+            try
+            {
+                databaseConn.Open();
+                MySqlCommand cmd = new MySqlCommand(query, databaseConn);
+                cmd.Parameters.AddWithValue("@id", id);
+                cmd.Parameters.AddWithValue("@nama", textBox1.Text);
+                cmd.Parameters.AddWithValue("@jumlah", textBox2.Text);
+                cmd.Parameters.AddWithValue("@type", tipe);
+                cmd.ExecuteNonQuery();
+                MessageBox.Show("Berhasil mengubah customer");
+                refresh();
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            finally
+            {
+                databaseConn.Close();
+                textBox1.Text = "";
+                textBox2.Text = "";
+            }
+        }
+
+        private void Button4_Click(object sender, EventArgs e)
+        {
+            string query = "DELETE FROM stgk_pemesanan WHERE id_pemesanan = @id;";
+            string id = label4.Text;
+            try
+            {
+                databaseConn.Open();
+                MySqlCommand cmd = new MySqlCommand(query, databaseConn);
+                cmd.Parameters.AddWithValue("@id", id);
+                cmd.ExecuteNonQuery();
+                MessageBox.Show("Berhasil menghapus customer");
+                refresh();
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            finally
+            {
+                databaseConn.Close();
+                textBox1.Text = "";
+                textBox2.Text = "";
+            }
+        }
+
+        private void Button5_Click(object sender, EventArgs e)
+        {
+            Orderlist order = new Orderlist();
+            order.Show();
         }
     }
 }

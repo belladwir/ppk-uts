@@ -22,6 +22,12 @@ namespace order_coffe
             InitializeComponent();
         }
 
+        public CheckOut(string terima)
+            : this()
+        {
+            text_no.Text = terima;
+        }
+
 
         private void CheckOut_Load(object sender, EventArgs e)
         {

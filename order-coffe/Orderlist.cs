@@ -23,7 +23,7 @@ namespace order_coffe
 
         public void getPemesanan()
         {
-            string query = "SELECT * FROM stgk_pemesanan INNER JOIN stgk_menu ON stgk_pemesanan.id_menu = stgk_menu.id_menu";
+            string query = "SELECT * FROM `stgk_pemesanan` WHERE status = 'proses'";
             try
             {
                 //koneksi dibuka
