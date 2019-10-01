@@ -31,7 +31,7 @@ namespace order_coffe
         public void refresh()
         {
             listView1.Items.Clear();
-            string query = "SELECT * FROM stgk_pemesanan";
+            string query = "SELECT * FROM stgk_pemesanan ";
             MySqlCommand cmd = new MySqlCommand(query, databaseConn);
             cmd.CommandTimeout = 60;
             MySqlDataReader r = cmd.ExecuteReader();
@@ -236,6 +236,67 @@ namespace order_coffe
         {
             Orderlist order = new Orderlist();
             order.Show();
+        }
+
+        private void Button7_Click(object sender, EventArgs e)
+        {
+            string query;
+            if(checkBox1.Checked)
+            {
+                query = "SELECT * FROM stgk_pemesanan WHERE tanggal = '" + dateTimePicker1.Value.ToString("yyyy-MM-dd")+ "';";
+            }
+            else
+            {
+                query = "SELECT * FROM stgk_pemesanan WHERE nama_pembeli LIKE '%" + text_cari.Text + "%';";
+            }
+            try
+            {
+                listView1.Items.Clear();
+                databaseConn.Open();
+                MySqlCommand cmd = new MySqlCommand(query, databaseConn);
+                cmd.CommandTimeout = 60;
+                MySqlDataReader r = cmd.ExecuteReader();
+                if (r.HasRows)
+                {
+                    while (r.Read())
+                    {
+                        ListViewItem cust = new ListViewItem(r["id_pemesanan"].ToString());
+                        cust.SubItems.Add(r["nama_pembeli"].ToString());
+                        cust.SubItems.Add(r["jumlah_orang"].ToString());
+                        cust.SubItems.Add(r["type"].ToString());
+                        cust.SubItems.Add(r["total_harga"].ToString());
+                        cust.SubItems.Add(r["status"].ToString());
+                        listView1.Items.Add(cust);
+                    }
+                    r.Close();
+                }
+                else
+                {
+                    MessageBox.Show("Data tidak ditemukan");
+                }
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            finally
+            {
+                databaseConn.Close();
+            }
+        }
+
+        private void CheckBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            if(checkBox1.Checked == true)
+            {
+                dateTimePicker1.Enabled = true;
+                text_cari.Enabled = false;
+            }
+            else
+            {
+                dateTimePicker1.Enabled = false;
+                text_cari.Enabled = true;
+            }
         }
     }
 }
