@@ -31,7 +31,8 @@ namespace order_coffe
         public void refresh()
         {
             listView1.Items.Clear();
-            string query = "SELECT * FROM stgk_pemesanan ";
+            
+            string query = "SELECT * FROM stgk_pemesanan WHERE tanggal ='"+DateTime.Now.ToString("yyyy-MM-dd")+"' ";
             MySqlCommand cmd = new MySqlCommand(query, databaseConn);
             cmd.CommandTimeout = 60;
             MySqlDataReader r = cmd.ExecuteReader();
@@ -58,7 +59,7 @@ namespace order_coffe
 
         private void Customer_Load(object sender, EventArgs e)
         {
-            string query = "SELECT * FROM stgk_pemesanan";
+            string query = "SELECT * FROM stgk_pemesanan WHERE tanggal ='" + DateTime.Now.ToString("yyyy-MM-dd") + "' ";
 
             databaseConn.Open();
             MySqlCommand cmd = new MySqlCommand(query, databaseConn);
@@ -167,6 +168,7 @@ namespace order_coffe
                 databaseConn.Close();
                 textBox1.Text = "";
                 textBox2.Text = "";
+                text_cari.Text = "";
             }
         }
 
@@ -204,6 +206,7 @@ namespace order_coffe
                 databaseConn.Close();
                 textBox1.Text = "";
                 textBox2.Text = "";
+                text_cari.Text = "";
             }
         }
 
@@ -229,6 +232,7 @@ namespace order_coffe
                 databaseConn.Close();
                 textBox1.Text = "";
                 textBox2.Text = "";
+                text_cari.Text = "";
             }
         }
 
@@ -240,15 +244,7 @@ namespace order_coffe
 
         private void Button7_Click(object sender, EventArgs e)
         {
-            string query;
-            if(checkBox1.Checked)
-            {
-                query = "SELECT * FROM stgk_pemesanan WHERE tanggal = '" + dateTimePicker1.Value.ToString("yyyy-MM-dd")+ "';";
-            }
-            else
-            {
-                query = "SELECT * FROM stgk_pemesanan WHERE nama_pembeli LIKE '%" + text_cari.Text + "%';";
-            }
+                string query = "SELECT * FROM stgk_pemesanan WHERE nama_pembeli LIKE '%" + text_cari.Text + "%' AND tanggal = '"+DateTime.Now.ToString("yyyy-MM-dd")+"';";
             try
             {
                 listView1.Items.Clear();
@@ -282,20 +278,6 @@ namespace order_coffe
             finally
             {
                 databaseConn.Close();
-            }
-        }
-
-        private void CheckBox1_CheckedChanged(object sender, EventArgs e)
-        {
-            if(checkBox1.Checked == true)
-            {
-                dateTimePicker1.Enabled = true;
-                text_cari.Enabled = false;
-            }
-            else
-            {
-                dateTimePicker1.Enabled = false;
-                text_cari.Enabled = true;
             }
         }
     }
